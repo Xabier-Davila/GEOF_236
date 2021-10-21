@@ -155,15 +155,15 @@ def eco_NP_deep(P_t0, Ns_t0, Nd_t0, seasons):
     v_max = 1.4     # Maximum Growth Rate Phyto (day-1)
     k_n = 0.1       # Half saturation constant Phyto (mmol/m3)
     Lambda_p = 0.05 # Phyto mortality rate (day-1) 
-    mu_p = 0.8      # Remineralized fraction Phyto 
-    #supp = 0.01      # Nutrient supply (mmol/day)
-    mixing = 0.01    # fraction of mixing between boxes (fraction/day)
+    mu_p = 0.5      # Remineralized fraction Phyto 
+    #supp = 0.01    # Nutrient supply (mmol/day)
+    mixing = 0.01   # fraction of mixing between boxes (fraction/day)
 
     ## Initialisation parameters
 
     t0 = 0                           # Initial time (days)
-    tf = 365*2                         # final time (days)
-    dt = 0.01                           # time step (days)
+    tf = 365*2                       # final time (days)
+    dt = 0.01                        # time step (days)
     nstep = int(tf/dt)               # number of time steps (hourly)
     t = np.linspace(t0,tf,nstep+1)   # timestep array (days)
 
@@ -187,29 +187,29 @@ def eco_NP_deep(P_t0, Ns_t0, Nd_t0, seasons):
         i = int(i)
         
         # Equation 4.3.6 in Sarmiento & Gruber
-        dP = (P[i-1] * (v_max * Ns[i-1] / (k_n + Ns[i-1])  # Uptake/Photosynthesis 
-            - Lambda_p))                                 # Mortality               
+        dP = (P[i-1] * (v_max * Ns[i-1] / (k_n + Ns[i-1])       # Uptake/Photosynthesis 
+            - Lambda_p))                                        # Mortality               
         
         if seasons==True:
             # Equation 4.3.7 in S&G
-            dNs = (P[i-1] * (-v_max * Ns[i-1] / (k_n + Ns[i-1]) # Phyto uptake
-                + mu_p*Lambda_p)                             # Remin Phyto
-                + mixing * abs(np.sin(t[i-1]*0.009)) * (Nd[i-1] - Ns[i-1]))              # Mixing with the deep box 
+            dNs = (P[i-1] * (-v_max * Ns[i-1] / (k_n + Ns[i-1])                     # Phyto uptake
+                + mu_p*Lambda_p)                                                    # Remin Phyto
+                + mixing * abs(np.sin(t[i-1]*0.009)) * (Nd[i-1] - Ns[i-1]))         # Mixing with the deep box 
 
 
-            dNd = ((1 - mu_p)*Lambda_p*P[i-1]                             # Export of phyto
-                + mixing * abs(np.sin(t[i-1]*0.009)) * (Ns[i-1] - Nd[i-1]))            # Seasonal Mixing with the surface box
+            dNd = ((1 - mu_p)*Lambda_p*P[i-1]                                    # Export of phyto
+                + mixing * abs(np.sin(t[i-1]*0.009)) * (Ns[i-1] - Nd[i-1]))      # Seasonal Mixing with the surface box
 
 
         if seasons==False:
             
-            dNs = (P[i-1] * (-v_max * Ns[i-1] / (k_n + Ns[i-1]) # Phyto uptake
-                + mu_p*Lambda_p)                             # Remin Phyto
-                + mixing * (Nd[i-1] - Ns[i-1]))              # Mixing with the deep box 
+            dNs = (P[i-1] * (-v_max * Ns[i-1] / (k_n + Ns[i-1])   # Phyto uptake
+                + mu_p*Lambda_p)                                  # Remin Phyto
+                + mixing * (Nd[i-1] - Ns[i-1]))                   # Mixing with the deep box 
 
 
-            dNd = ((1 - mu_p)*Lambda_p*P[i-1]                             # Export of phyto
-                + mixing * (Ns[i-1] - Nd[i-1]))            # Mixing with the surface box
+            dNd = ((1 - mu_p)*Lambda_p*P[i-1]                     # Export of phyto
+                + mixing * (Ns[i-1] - Nd[i-1]))                   # Mixing with the surface box
             
 
 
